@@ -1,0 +1,9 @@
+Inspection Summary Report
+-------------------------
+Total Quantity Inspected: 445
+
+Status Counts:
+status
+PASS    2
+FAIL    2
+HOLD    1

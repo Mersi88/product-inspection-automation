@@ -1,0 +1,6 @@
+product_id,inspection_date,status,quantity,inspector
+A101,2024-03-01,PASS,120,John
+A102,2024-03-01,FAIL,50,Sarah
+A103,2024-03-02,HOLD,0,Mike
+A104,2024-03-02,PASS,200,Unknown
+A105,2024-03-03,FAIL,75,Sarah
