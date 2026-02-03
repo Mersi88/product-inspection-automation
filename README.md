@@ -19,4 +19,16 @@ data preprocessing → analysis → backend API → frontend visualization.
 
 ---
 
-## Project Structure
+## Tech Stack
+- Python
+- Pandas, NumPy
+- Flask (REST API + HTML dashboard)
+- JavaScript (fetch API)
+- HTML
+- Matplotlib
+
+## How to Run
+```bash
+pip install flask pandas
+python data/eda_project/web/app.py
+
