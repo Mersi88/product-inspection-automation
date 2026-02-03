@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inspection Summary</title>
+</head>
+<body>
+    <h1>Inspection Summary</h1>
+
+<p><strong>Total Quantity:</strong> <span id="totalQuantity"></span></p>
+
+<h2>Status Counts</h2>
+<ul id="statusList"></ul>
+
+<canvas id="statusChart" width="400" height="200"></canvas>
+
+<button onclick="refreshData()">Refresh Data</button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let chart;
+
+async function refreshData() {
+  const res = await fetch("/api/summary");
+  const data = await res.json();
+
+  document.getElementById("totalQuantity").innerText = data.total_quantity;
+
+  const list = document.getElementById("statusList");
+  list.innerHTML = "";
+
+  const labels = [];
+  const values = [];
+
+  for (const [status, count] of Object.entries(data.status_counts)) {
+    labels.push(status);
+    values.push(count);
+
+    const li = document.createElement("li");
+    li.innerText = `${status}: ${count}`;
+    list.appendChild(li);
+  }
+
+  const ctx = document.getElementById("statusChart").getContext("2d");
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Inspection Status Count",
+        data: values,
+        backgroundColor: ["green", "red", "orange"]
+      }]
+    }
+  });
+}
+
+refreshData();
+</script>
+
+</body>
+</html>
