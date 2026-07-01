@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import sqlite3
 
 def load_and_clean_data():
     df = pd.read_csv("data/raw_data.csv")
@@ -15,6 +16,21 @@ def analyze_data(df):
 
 def save_outputs(df):
     df.to_csv("data/cleaned_data.csv", index=False)
+
+def load_to_database(df):
+    conn = sqlite3.connect("data/inspections.db")
+    df.to_sql("inspections", conn, if_exists="replace", index=False)
+    
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT status, COUNT(*) as count, SUM(quantity) as total_quantity
+        FROM inspections
+        GROUP BY status
+    """)
+    
+    results = cursor.fetchall()
+    conn.close()
+    return results
 
 def generate_chart(status_counts):
     status_counts.plot(kind="bar")
@@ -51,6 +67,10 @@ def main():
             print(status_counts)
 
             save_outputs(df)
+            db_results = load_to_database(df)
+            print("\n--- Database Query Results ---")
+            for row in db_results:
+              print(f"Status: {row[0]}, Count: {row[1]}, Total Quantity: {row[2]}")
             generate_chart(status_counts)
             generate_report(total_quantity, status_counts)
 
