@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE_DIR, "..", "..", "cleaned_data.csv")
+CSV_PATH = os.path.join(BASE_DIR, "..", "data", "cleaned_data.csv")
 
 @app.route("/")
 def home():

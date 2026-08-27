@@ -1,52 +1,57 @@
-# Inspection Data Analysis & Dashboard (Flask)
+# Product Inspection Automation & Dashboard
 
-## Overview
-This project demonstrates an end-to-end data workflow using Python. It starts with raw inspection data, performs data cleaning and exploratory analysis using Pandas, and exposes the results through a lightweight Flask web application with a simple interactive dashboard.
+An end-to-end data pipeline that takes raw product inspection records, cleans and analyzes them with Pandas, loads results into SQLite, and serves them through a Flask API and dashboard.
 
-The goal of this project is to showcase practical skills across:
-data preprocessing → analysis → backend API → frontend visualization.
+## What it does
 
----
+- **Extract & clean**: reads raw inspection CSVs, drops duplicates, fills missing values, normalizes types
+- **Analyze**: aggregates inspection status counts and total quantities inspected
+- **Load**: writes cleaned data into a SQLite database and runs SQL aggregation queries against it
+- **Report**: auto-generates a bar chart and a plain-text summary report from each run
+- **Serve**: exposes the cleaned data through a Flask REST API (`/api/summary`, with optional status filtering) and a simple HTML dashboard
 
-## Features
-- Data cleaning and preprocessing using Pandas
-- Exploratory Data Analysis (EDA)
-- Flask backend with:
-  - HTML dashboard
-  - JSON API endpoint
-- Dynamic inspection status visualization
-- Clear separation of data, analysis, and web layers
+## Tech stack
 
----
+Python · Pandas · SQLite · Flask · Matplotlib
 
-## Tech Stack
-- Python
-- Pandas, NumPy
-- Flask (REST API + HTML dashboard)
-- JavaScript (fetch API)
-- HTML
-- Matplotlib
-## Architecture Overview
+## Project structure
 
-The application follows a layered full-stack structure:
+```
+.
+├── src/
+│   ├── main.py              # CLI: run the clean → analyze → load → report pipeline
+│   ├── eda.py                # exploratory data analysis
+│   └── preprocess_data.py    # data cleaning / preprocessing utilities
+├── web/
+│   ├── app.py                # Flask API + dashboard
+│   └── templates/index.html  # dashboard page
+├── data/                      # raw + cleaned data, SQLite DB, generated report/chart
+└── docs/                      # screenshots
+```
 
-• Data Layer  
-  - Raw inspection data stored as CSV files  
-  - Data cleaned and preprocessed using Pandas  
+## Running it
 
-• Backend Layer (Flask API)  
-  - Processes cleaned datasets  
-  - Provides JSON endpoints for dashboard data  
-  - Handles routing between frontend and analysis logic  
+Pipeline (cleans data, loads it into SQLite, generates a chart + report):
+```bash
+pip install pandas matplotlib
+python src/main.py
+```
 
-• Frontend Layer  
-  - HTML dashboard using Flask templates  
-  - Displays inspection trends and status distribution visuals  
-
-This design demonstrates separation of concerns and scalable backend-frontend interaction.
-
-## How to Run
+Dashboard (serves the cleaned data):
 ```bash
 pip install flask pandas
-python data/eda_project/web/app.py
+python web/app.py
+```
+Then visit `http://localhost:5000` for the dashboard, or `http://localhost:5000/api/summary` for the raw JSON (add `?status=<value>` to filter).
 
+## Screenshots
+
+![Status distribution](docs/status_distribution.png)
+![Average quantity by status](docs/avg_quantity_by_status.png)
+
+## What this project demonstrates
+
+- Structuring a small pipeline into clear extract/transform/load stages instead of one script that does everything
+- Moving data between a CSV-based analysis layer and a queryable SQLite store
+- Building a REST API on top of a Pandas-backed dataset, with filtering support
+- Separating data, backend, and presentation concerns into distinct layers
